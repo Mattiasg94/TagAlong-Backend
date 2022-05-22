@@ -1,4 +1,3 @@
-from dataclasses import field, fields
 from rest_framework import serializers
 from website.models import Event
 from accounts.models import User, FriendRequest

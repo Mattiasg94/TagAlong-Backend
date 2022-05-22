@@ -1,8 +1,5 @@
 from django.db import models
-from django.contrib.postgres.fields import ArrayField, JSONField
-from django.dispatch import receiver
-from django.contrib.auth.models import AbstractUser,BaseUserManager
-
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 
 
 class UserManager(BaseUserManager):
@@ -38,13 +35,15 @@ class UserManager(BaseUserManager):
 
         return user
 
+
 class User(AbstractUser):
-    friends = models.ManyToManyField('User',blank=True)
-    profile_img = models.ImageField(upload_to='profile_imgs/',null=True,blank=True)
+    friends = models.ManyToManyField('User', blank=True)
+    profile_img = models.ImageField(
+        upload_to='profile_imgs/', null=True, blank=True)
 
 
 class FriendRequest(models.Model):
-    from_user=models.ForeignKey(User,related_name='from_user',on_delete=models.CASCADE)
-    to_user=models.ForeignKey(User,related_name='to_user',on_delete=models.CASCADE)
-
-
+    from_user = models.ForeignKey(
+        User, related_name='from_user', on_delete=models.CASCADE)
+    to_user = models.ForeignKey(
+        User, related_name='to_user', on_delete=models.CASCADE)

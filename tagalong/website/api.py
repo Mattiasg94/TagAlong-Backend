@@ -1,11 +1,9 @@
-from asyncio import constants
 from website.models import Event, EventTemplate
 from .serializers import EventSerializer, EventTemplateSerializer
 from datetime import datetime
 from rest_framework.response import Response
 from accounts.models import User
 from rest_framework.views import APIView
-from django.utils.translation import gettext as _
 import logging
 from accounts.serializers import UserSerializer
 from rest_framework import status

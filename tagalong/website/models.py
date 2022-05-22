@@ -1,8 +1,5 @@
 from accounts.models import User
 from django.db import models
-from django.contrib.postgres.fields import ArrayField
-from django.contrib.postgres.fields import JSONField
-import json
 import logging
 logger = logging.getLogger("mylogger")
 
