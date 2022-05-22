@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body %}
+
+<head>
+    {% block stylesheet %}
+    {% endblock %}
+  </head>
+  
+<div class="container mt-3 boxed-container-750px">
+    <h4>My events</h4>
+    {% for event in events %}
+    <form method="post" action="{{ request.scheme }}://{{ request.get_host }}/my-events/">
+        {% csrf_token %}
+        <input type="hidden" name="event_id" value="{{event.pk}}">
+        <article class="service-article boxed-container-750px">
+            <table>
+                    <tr>
+                    <td>
+                        <p>{% if event.user.profile_img.url %}<img class="profile-img" src="{{event.user.profile_img.url}}" height="30px">{% endif %} <i>{{event.user.first_name}} {{event.user.last_name}}</i></p>
+                    </td>
+                    <td>
+                        <button  name="action" value="delete" class="btn btn-danger">Delete <i class="fas fa-trash-alt"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <h4>{{event.title}}</h4>
+                    </td>
+                    <td>
+                        <p>{{event.date}}</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p><a href="{{event.link}}">{{event.link_text}}</a></p>
+                    </td>
+                    <td>
+                        <p><a href="{{event.adress_link}}">{{event.adress}}</a></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <p>{{event.description}}</p>
+                    </td>
+                </tr>
+            </table>
+        </article>
+    </form>
+    {% endfor %}
+</div>
+<script>
+    function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+</script>
+{% endblock %}

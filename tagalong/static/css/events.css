@@ -1,0 +1,24 @@
+.service-article {
+    border-radius: .5rem;
+    box-shadow: 0 1px 2px 1px #00000020;
+    margin-bottom: 4px;
+    padding: 0.4em;
+}
+
+.service-article td {
+    vertical-align: middle;
+}
+
+table td {
+    border: none !important;
+}
+
+.service-article h4, .service-article p {
+    text-align: left;
+    margin-bottom: 0px;
+}
+
+table td{
+    background-color: white;
+    text-align: left;
+}

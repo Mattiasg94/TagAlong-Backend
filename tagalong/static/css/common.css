@@ -1,0 +1,30 @@
+
+.boxed-container-750px {
+	margin: 0 auto;
+	min-height: calc(100% - 3em);
+	max-width: 750px;
+}
+body{
+	text-align: center;
+	font-family: "Lucida Grande", "Lucida Sans Unicode", Verdana, Helvetica, Arial, sans-serif;
+	background-color: #eee;
+	color: #444;
+	font-size: 75%;
+}
+/* h1, h2, h3, h4, h5, h6, ul li, p {
+    font-family: 'Glory' !important;
+    font-weight: 600;
+    color: #4e4e4e;
+} */
+
+input, textarea, select, .form-row p, form .button {
+    margin: 2px 0;
+    padding: 2px 3px;
+    vertical-align: middle;
+    font-family: "Roboto", "Lucida Grande", Verdana, Arial, sans-serif;
+    font-weight: normal;
+    font-size: 13px;
+}
+.profile-img{
+    border-radius: 50%;
+}

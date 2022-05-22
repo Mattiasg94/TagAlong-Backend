@@ -1,0 +1,6 @@
+{% autoescape off %}
+Hi {{ user.username }},
+Klicka på länken för att bekräfta din registrering,
+http://{{ domain }}{% url 'verify_email' uidb64=uid token=token %}
+Om du tror att det inte är du, ignorerar du bara det här e-postmeddelandet.
+{% endautoescape %}

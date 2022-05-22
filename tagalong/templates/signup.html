@@ -1,0 +1,23 @@
+{% extends 'base_accounts.html' %}
+
+{% block title %}Registrering hos {% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8 col-md-10 col-sm-12">
+    <div class="card">
+      <div class="card-body">
+        <h3 class="card-title">Registrering</h3>
+        <form method="post" novalidate>
+          {% csrf_token %}
+          {% include 'includes/form.html' %}
+          <button type="submit" class="btn btn-primary btn-block">Skapa konto</button>
+        </form>
+      </div>
+      <div class="card-footer text-muted text-center">
+        Har du redan ett konto? <a href="{% url 'login' %}">Logga in</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

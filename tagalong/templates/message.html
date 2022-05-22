@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+
+{% block body %}
+{% if message %}
+{{message |safe}}
+{% endif %}
+{% endblock %}
