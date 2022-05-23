@@ -56,17 +56,16 @@ class UserById(APIView):
                         friend_to_remove.friends.add(user)
                         friend_to_remove.save()
             serializer.save()
-            info_message = {'msgs': {'info': f'updated'}}
+            info_message = {'msg': 'updated', 'msgType': 'info'}
             return Response(data=info_message, status=200)
-        print(serializer.errors)
         return Response(serializer.errors, status=400)
 
-    def delete(self, request, pk=None):
-        user = User.objects.get(pk=pk)
-        serializer = UserSerializer(user)
-        info_message = {'msgs': {'info': f'Deleted template {user.username}'}}
-        user.delete()
-        return Response({**serializer.data, **info_message})
+    # def delete(self, request, pk=None):
+    #     user = User.objects.get(pk=pk)
+    #     serializer = UserSerializer(user)
+    #     info_message = {'msg': {'info': f'Deleted template {user.username}'}}
+    #     user.delete()
+    #     return Response({**serializer.data, **info_message})
 
 
 class GetEventUsers(APIView):
@@ -88,9 +87,8 @@ class HandleFriendRequest(APIView):
         serializer = FriendRequestSerializers(data=request.data, many=False)
         if serializer.is_valid():
             serializer.save()
-            info_message = {'msgs': {'info': f'Friend request sent'}}
+            info_message = {'msg': 'Friend request sent', 'msgType': 'info'}
             return Response(data=info_message, status=status.HTTP_201_CREATED)
-        print(serializer.errors)
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -117,10 +115,8 @@ class SendEmailToUsers(APIView):
         for user in users:
             if action == 'eventCreated':
                 event = Event.objects.filter(pk=target)
-                print(event)
-                print(target)
                 # send_mail('New TagAlong Event', 'message', EMAIL_HOST_USER, [user.email])
 
         # serializer = UserSerializer(instances,many=True)
-        # info_message={'msgs':{'info':f'Friend request sent'}}
+        # info_message={'msg':{'info':f'Friend request sent'}}
         return Response()

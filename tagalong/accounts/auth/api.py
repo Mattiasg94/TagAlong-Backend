@@ -1,6 +1,6 @@
 from rest_framework.response import Response
-from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView
-from rest_framework.viewsets import ModelViewSet,ViewSet
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from rest_framework.viewsets import ModelViewSet, ViewSet
 from rest_framework.permissions import AllowAny
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -33,6 +33,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
         return obj
 
+
 class LoginViewSet(ModelViewSet, TokenObtainPairView):
     serializer_class = LoginSerializer
     permission_classes = (AllowAny,)
@@ -40,14 +41,10 @@ class LoginViewSet(ModelViewSet, TokenObtainPairView):
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        print('serializer',serializer)
-        print('valid',serializer.is_valid())
-        print(serializer.errors)
         try:
             serializer.is_valid(raise_exception=True)
         except TokenError as e:
             raise InvalidToken(e.args[0])
-        print(serializer.validated_data)
         return Response(serializer.validated_data, status=status.HTTP_200_OK)
 
 
@@ -58,8 +55,6 @@ class RegistrationViewSet(ModelViewSet, TokenObtainPairView):
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        print(serializer.is_valid())
-        print(serializer.errors)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
         refresh = RefreshToken.for_user(user)
@@ -78,12 +73,9 @@ class RegistrationViewSet(ModelViewSet, TokenObtainPairView):
 class RefreshViewSet(ViewSet, TokenRefreshView):
     permission_classes = (AllowAny,)
     http_method_names = ['post']
+
     def create(self, request, *args, **kwargs):
-        print('----------')
-        print(request.data)
         serializer = self.get_serializer(data=request.data)
-        print(serializer.is_valid())
-        print(serializer.errors)
         # try:
         #     serializer.is_valid(raise_exception=True)
         # except TokenError as e:

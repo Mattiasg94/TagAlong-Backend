@@ -1,0 +1,4 @@
+etc/
+tagalong/accounts/migrations/
+tagalong/website/migrations/
+venv/

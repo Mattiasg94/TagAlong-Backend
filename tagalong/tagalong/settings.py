@@ -24,7 +24,7 @@ if development:
 else:
     with open('/etc/config.json') as config_file:
         config = json.load(config_file)
-print(config)
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...).
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -120,8 +120,8 @@ DATABASES = {
         'NAME': config['postgres_NAME'],
         'USER': config['postgres_USER'],
         'PASSWORD': config['postgres_PASSWORD'],
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'HOST': '127.0.0.1',
+        'PORT': '5433',
     }
 }
 

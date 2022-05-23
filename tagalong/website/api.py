@@ -29,6 +29,7 @@ class TemplateEventsList(APIView):
                 pk__in=templates_serializer.data[i]['invites']), many=True)
             for j, invite in enumerate(invites_serializer.data):
                 templates_serializer.data[i]['invites'][j] = invite
+                templates_serializer.data[i]['user'] = user
         return Response(templates_serializer.data)
 
     # TODO here the user is in the formdata and not in the url!! how to do? request.data={user:['1']}
@@ -40,7 +41,7 @@ class TemplateEventsList(APIView):
         if serializer.is_valid():
             serializer.save()
             info_message = {
-                'msgs': {'info': f'Template {serializer.data["title"]} created'}}
+                'msg': f'Template {serializer.data["title"]} created', 'msgType': 'info'}
             return Response(data={**serializer.data, **info_message}, status=status.HTTP_201_CREATED)
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -62,16 +63,15 @@ class TemplateById(APIView):
         if serializer.is_valid():
             serializer.save()
             info_message = {
-                'msgs': {'info': f'Template {serializer.data["title"]} updated'}}
+                'msg': {'info': f'Template {serializer.data["title"]} updated'}}
             return Response(data=info_message, status=200)
-        print(serializer.errors)
-        print(request.data)
         return Response(serializer.errors, status=400)
 
     def delete(self, request, pk=None):
         template = EventTemplate.objects.get(pk=pk)
         serializer = EventTemplateSerializer(template)
-        info_message = {'msgs': {'info': f'Deleted template {template.title}'}}
+        info_message = {'msgType': 'info',
+                        'msg': f'Deleted template {template.title}'}
         template.delete()
         return Response({**serializer.data, **info_message})
 
@@ -107,7 +107,7 @@ class EventsList(APIView):
             user = User.objects.get(pk=pk)
             serializer.save(user=user)
             info_message = {
-                'msgs': {'info': f'Event {serializer.data["title"]} created'}}
+                'msg': f'Event {serializer.data["title"]} created', 'msgType': 'info'}
             return Response(data={**serializer.data, **info_message}, status=status.HTTP_201_CREATED)
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -144,13 +144,14 @@ class EventsById(APIView):
             if serializer.is_valid():
                 serializer.save()
                 info_message = {
-                    'msgs': {'info': f'Event {serializer.data["title"]} updated'}}
+                    'msg': f'Event {serializer.data["title"]} updated', 'msgType': 'info'}
             return Response(data={**serializer.data, **info_message}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=400)
 
     def delete(self, request, pk=None):
         event = Event.objects.get(pk=pk)
         serializer = EventSerializer(event)
-        info_message = {'msgs': {'info': f'Deleted Event {Event.title}'}}
+        info_message = {
+            'msg': f'Deleted Event {Event.title}', 'msgType': 'info'}
         event.delete()
         return Response({**serializer.data, **info_message})
