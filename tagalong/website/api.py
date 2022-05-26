@@ -7,6 +7,10 @@ from rest_framework.views import APIView
 import logging
 from accounts.serializers import UserSerializer
 from rest_framework import status
+from django.db.models import Q
+from django.db.models import F
+from django.db.models import Count
+
 logger = logging.getLogger('django')
 
 
@@ -43,6 +47,7 @@ class TemplateEventsList(APIView):
             info_message = {
                 'msg': f'Template {serializer.data["title"]} created', 'msgType': 'info'}
             return Response(data={**serializer.data, **info_message}, status=status.HTTP_201_CREATED)
+        print(serializer.errors)
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -65,6 +70,7 @@ class TemplateById(APIView):
             info_message = {
                 'msg': {'info': f'Template {serializer.data["title"]} updated'}}
             return Response(data=info_message, status=200)
+        print(serializer.errors)
         return Response(serializer.errors, status=400)
 
     def delete(self, request, pk=None):
@@ -78,9 +84,33 @@ class TemplateById(APIView):
 
 class EventsList(APIView):
 
-    def get(self, request):
+    def get(self, request, pk, page):
+        user = User.objects.get(pk=pk)
+        if page == 'explore':
+            friends_ids = [friend.id for friend in user.friends.all()]
+            direct_invites = Event.objects.filter(invites__in=[user.id])
+            events = direct_invites
+            indirect_friends_of_participant_events = Event.objects.filter(
+                participants__in=friends_ids)
+            indirect_invites_by_template = indirect_friends_of_participant_events.filter(
+                indirect_invites_templates__invites__in=[user.id])
+            indirect_invites_by_all_friends = indirect_friends_of_participant_events.filter(
+                indirect_invites_templates=None)
+            events = direct_invites | indirect_invites_by_template | indirect_invites_by_all_friends
+            # events = events.filter(invites__len__gte=F('max_invites'))
+            events = events.annotate(num_invites=Count('max_invites')).filter(
+                num_invites__lt=F('max_invites'))
+            # for event in events:
+            #     if event.max_invites == len(event.invites.all()):
+            #         events_max_invites_reached.append(event.id)
+            # events = events.exclude(pk__in=events_max_invites_reached)
+
+        elif page == 'myevents':  # My enevts or attending
+            events = Event.objects.filter(
+                Q(participants__in=[user.id]) | Q(user=user))
+
         events_serializer = EventSerializer(
-            Event.objects.all().order_by('title'), many=True)
+            events.distinct().order_by('date'), many=True)
         users_ids = [template['user'] for template in events_serializer.data]
         users_serializer = UserSerializer(
             User.objects.filter(id__in=users_ids), many=True)
@@ -126,15 +156,23 @@ class EventsById(APIView):
         user_serializer = UserSerializer(User.objects.get(pk=event.user.id))
         return Response({**event_serializer.data, **user_serializer.data})
 
-    def put(self, request, pk=None, action=None, target=None):
+    def put(self, request, pk, action=None, target=None, templateId=None):  # TODO rename target
         event = Event.objects.get(pk=pk)
         if action == 'attend':
             event.participants.add(User.objects.get(pk=target))
+            if int(templateId):
+                event.indirect_invites_templates.add(
+                    EventTemplate.objects.get(pk=templateId))
             event.save()
             return Response('', status=200)
         elif action == 'decline':
-            event.participants.remove(User.objects.get(pk=target))
-            event.save()
+            user = User.objects.get(pk=target)
+            event.participants.remove(user)
+            template_to_remove = event.indirect_invites_templates.all().filter(user=user).first()
+            if template_to_remove:
+                event.indirect_invites_templates.remove(
+                    EventTemplate.objects.get(pk=template_to_remove.id))
+            # event.save()
             return Response('', status=200)
         else:
             data = request.data

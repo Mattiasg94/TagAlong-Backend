@@ -1,5 +1,7 @@
 etc/
 tagalong/accounts/migrations/
 tagalong/website/migrations/
+tagalong/tagalong/__pycache__/
+tagalong/website/__pycache__/
 tagalong/__pycache__
 venv/
