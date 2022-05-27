@@ -115,8 +115,10 @@ class SendEmailToUsers(APIView):
         for user in users:
             if action == 'eventCreated':
                 event = Event.objects.filter(pk=target)
-                # send_mail('New TagAlong Event', 'message', EMAIL_HOST_USER, [user.email])
-
+                # send_mail('New TagAlong Event', 'message',
+                #           EMAIL_HOST_USER, [user.email])
+        send_mail('New TagAlong Event', 'message',
+                  EMAIL_HOST_USER, ['mattiasg_94@hotmail.com'])
         # serializer = UserSerializer(instances,many=True)
         # info_message={'msg':{'info':f'Friend request sent'}}
         return Response()

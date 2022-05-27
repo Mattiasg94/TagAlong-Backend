@@ -41,6 +41,8 @@ class LoginViewSet(ModelViewSet, TokenObtainPairView):
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
+        print(serializer.is_valid())
+        print(serializer.errors)
         try:
             serializer.is_valid(raise_exception=True)
         except TokenError as e:
@@ -78,6 +80,8 @@ class RefreshViewSet(ViewSet, TokenRefreshView):
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
+        print(serializer.is_valid())
+        print(serializer.errors)
         # try:
         #     serializer.is_valid(raise_exception=True)
         # except TokenError as e:
