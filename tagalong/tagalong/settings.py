@@ -17,9 +17,9 @@ import json
 import logging
 logger = logging.getLogger('mylogger')
 
-development = False
+development = True
 if development:
-    with open('/home/ubuntu/django/TagAlong-Backend/tagalong/config.json') as config_file:
+    with open('../etc/config.json') as config_file:
         config = json.load(config_file)
 else:
     with open('/home/ubuntu/django/TagAlong-Backend/tagalong/config.json') as config_file:
@@ -175,7 +175,7 @@ MESSAGE_TAGS = {
     messages.ERROR: 'alert-danger',
 }
 
-if not development:
+if not development and False:
     LOGGING = {
         'version': 1,
         'disable_existing_loggers': False,
