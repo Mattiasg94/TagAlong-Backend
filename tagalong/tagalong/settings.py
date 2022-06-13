@@ -19,10 +19,10 @@ logger = logging.getLogger('mylogger')
 
 development = True
 if development:
-    with open('../etc/config.json') as config_file:
+    with open('D:\\FREELANCER\\MATTIAS\\MATBACKEND\\TagAlong-Backend\\tagalong\\config.json') as config_file:
         config = json.load(config_file)
 else:
-    with open('/etc/config.json') as config_file:
+    with open('D:\\FREELANCER\\MATTIAS\\MATBACKEND\\TagAlong-Backend\\tagalong\\config.json') as config_file:
         config = json.load(config_file)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...).
@@ -121,7 +121,7 @@ DATABASES = {
         'USER': config['postgres_USER'],
         'PASSWORD': config['postgres_PASSWORD'],
         'HOST': '127.0.0.1',
-        'PORT': '5433',
+        'PORT': '5432',
     }
 }
 
@@ -156,12 +156,10 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
-#STATIC_ROOT = os.path.join(BASE_DIR,'static')
+STATIC_ROOT = os.path.join(BASE_DIR,'static')
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
+#STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
