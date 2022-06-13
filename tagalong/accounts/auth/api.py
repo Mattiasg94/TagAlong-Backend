@@ -41,8 +41,6 @@ class LoginViewSet(ModelViewSet, TokenObtainPairView):
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        print(serializer.is_valid())
-        print(serializer.errors)
         try:
             serializer.is_valid(raise_exception=True)
         except TokenError as e:
@@ -57,11 +55,11 @@ class RegistrationViewSet(ModelViewSet, TokenObtainPairView):
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        print(serializer.is_valid())
-        print(serializer.errors)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
+        print('user', user)
         refresh = RefreshToken.for_user(user)
+        print('refresh', refresh)
         res = {
             "refresh": str(refresh),
             "access": str(refresh.access_token),
@@ -80,11 +78,9 @@ class RefreshViewSet(ViewSet, TokenRefreshView):
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        print(serializer.is_valid())
-        print(serializer.errors)
-        # try:
-        #     serializer.is_valid(raise_exception=True)
-        # except TokenError as e:
-        #     raise InvalidToken(e.args[0])
+        try:
+            serializer.is_valid(raise_exception=True)
+        except TokenError as e:
+            raise InvalidToken(e.args[0])
 
         return Response(serializer.validated_data, status=status.HTTP_200_OK)

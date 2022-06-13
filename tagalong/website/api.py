@@ -1,3 +1,5 @@
+import ast
+import json
 from website.models import Event, EventTemplate
 from .serializers import EventSerializer, EventTemplateSerializer
 from datetime import datetime
@@ -47,7 +49,6 @@ class TemplateEventsList(APIView):
             info_message = {
                 'msg': f'Template {serializer.data["title"]} created', 'msgType': 'info'}
             return Response(data={**serializer.data, **info_message}, status=status.HTTP_201_CREATED)
-        print(serializer.errors)
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -70,7 +71,6 @@ class TemplateById(APIView):
             info_message = {
                 'msg': {'info': f'Template {serializer.data["title"]} updated'}}
             return Response(data=info_message, status=200)
-        print(serializer.errors)
         return Response(serializer.errors, status=400)
 
     def delete(self, request, pk=None):
@@ -132,6 +132,7 @@ class EventsList(APIView):
         data = request.data
         data._mutable = True
         data['date'] = datetime.strptime(data['date'], '%m/%d/%Y')
+        data['participants'] = pk
         serializer = EventSerializer(data=data, many=False)
         if serializer.is_valid():
             user = User.objects.get(pk=pk)
@@ -172,17 +173,29 @@ class EventsById(APIView):
             if template_to_remove:
                 event.indirect_invites_templates.remove(
                     EventTemplate.objects.get(pk=template_to_remove.id))
-            # event.save()
+            event.save()
             return Response('', status=200)
-        else:
-            data = request.data
-            data._mutable = True
+        elif action == 'addComment':
+            event.comments[request.data['id']] = {
+                'msg': request.data['msg'],
+                'user': request.data['user'],
+                'created': request.data['created']}
+            event.save()
+            return Response(data=event.comments, status=status.HTTP_201_CREATED)
+        elif action == 'deleteComment':
+            del event.comments[target]
+            event.save()
+            return Response(data=event.comments, status=status.HTTP_201_CREATED)
+        else:  # TODO need an action on this one
+            data = ast.literal_eval(json.dumps(request.data))
             data['date'] = datetime.strptime(data['date'], '%m/%d/%Y')
+            data['participants'] = list(
+                event.participants.all().values_list('id', flat=True))
             serializer = EventSerializer(event, data=data)
             if serializer.is_valid():
                 serializer.save()
-                info_message = {
-                    'msg': f'Event {serializer.data["title"]} updated', 'msgType': 'info'}
+            info_message = {
+                'msg': f'Event {serializer.data["title"]} updated', 'msgType': 'info'}
             return Response(data={**serializer.data, **info_message}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=400)
 

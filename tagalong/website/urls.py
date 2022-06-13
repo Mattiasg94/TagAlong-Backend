@@ -11,6 +11,8 @@ urlpatterns = [
     path(r'api/event/<str:pk>/', api.EventsById.as_view()),  # Delete event
     # path(r'api/event/<str:pk>/<str:action>/', api.EventsById.as_view()),
 
+    path(r'api/event/<str:pk>/<str:action>/',
+         api.EventsById.as_view()),
     path(r'api/event/<str:pk>/<str:action>/<str:target>/',
          api.EventsById.as_view()),
     path(r'api/event/<str:pk>/<str:action>/<str:target>/<str:templateId>/',

@@ -1,5 +1,7 @@
 from accounts.models import User
 from django.db import models
+from django.db.models import JSONField
+
 import logging
 logger = logging.getLogger("mylogger")
 
@@ -19,6 +21,13 @@ class EventTemplate(models.Model):
         return f'{self.user.username} {self.title}'
 
 
+def get_default_comments():
+    return {
+        "18:00": {"msg": "My message", "user": "mattias"},
+        "19:00": {"msg": "My second message", "user": "Hedy"}
+    }
+
+
 class Event(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=40)
@@ -35,6 +44,7 @@ class Event(models.Model):
     max_invites = models.IntegerField()
     indirect_invites_templates = models.ManyToManyField(
         EventTemplate, blank=True, related_name='indirect_invites_templates')
+    comments = JSONField(null=True, blank=True, default=dict)
 
     def __str__(self):
         return f'{self.user.username} {self.title}'

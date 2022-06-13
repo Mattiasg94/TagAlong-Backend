@@ -17,7 +17,7 @@ import json
 import logging
 logger = logging.getLogger('mylogger')
 
-development = True
+development = False
 if development:
     with open('../etc/config.json') as config_file:
         config = json.load(config_file)
