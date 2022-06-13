@@ -17,7 +17,7 @@ import json
 import logging
 logger = logging.getLogger('mylogger')
 
-development = True
+development = False
 if development:
     with open('../etc/config.json') as config_file:
         config = json.load(config_file)
@@ -175,7 +175,7 @@ MESSAGE_TAGS = {
     messages.ERROR: 'alert-danger',
 }
 
-if not development and False:
+if not development:
     LOGGING = {
         'version': 1,
         'disable_existing_loggers': False,
