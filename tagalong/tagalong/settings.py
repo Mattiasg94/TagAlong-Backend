@@ -19,10 +19,10 @@ logger = logging.getLogger('mylogger')
 
 development = False
 if development:
-    with open('../etc/config.json') as config_file:
+    with open('/home/ubuntu/django/TagAlong-Backend/tagalong/config.json') as config_file:
         config = json.load(config_file)
 else:
-    with open('/etc/config.json') as config_file:
+    with open('/home/ubuntu/django/TagAlong-Backend/tagalong/config.json') as config_file:
         config = json.load(config_file)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...).
@@ -38,7 +38,7 @@ SECRET_KEY = config['SECRET_KEY']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1'] if development else ['tagalong.se']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '*'] if development else ['*']
 
 #EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST_USER = config['EMAIL']
@@ -74,11 +74,14 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
 ]
-CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:3000',
     'http://127.0.0.1:3000',
+    'http://tagalong.me',
+    'https://tagalong.me',
+    'http://18.205.0.42:80',
 )
 ROOT_URLCONF = 'tagalong.urls'
 
@@ -120,8 +123,8 @@ DATABASES = {
         'NAME': config['postgres_NAME'],
         'USER': config['postgres_USER'],
         'PASSWORD': config['postgres_PASSWORD'],
-        'HOST': '127.0.0.1',
-        'PORT': '5433',
+        'HOST': 'tagalongdev.cgnfypsotxr9.us-east-1.rds.amazonaws.com',
+        'PORT': '5432',
     }
 }
 
@@ -156,12 +159,10 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
-#STATIC_ROOT = os.path.join(BASE_DIR,'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
+#STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
