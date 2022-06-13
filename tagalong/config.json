@@ -1,0 +1,8 @@
+{
+    "SECRET_KEY": "4w$1269zh6r1!1yy*jgz+u7nq8j02u-o4_7)sn9+4i!4!+vw6l",
+    "EMAIL": "",
+    "EMAIL_HOST_PASSWORD": "",
+    "postgres_NAME": "tagalongDB",
+    "postgres_USER": "postgres",
+    "postgres_PASSWORD": "DetOrdnarSig1!"
+}
